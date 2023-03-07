@@ -145,4 +145,15 @@ Front end : No change in the application behaviour, it is working as expected.
 DB pod delete:
 Backend : Pod got deleted and new DB pod got created. And both result and worker pod container got restarted without disturbing the pod.
 	Container restart has happened, which reestablish the connection with new DB and it works well with existing result and worker pod only. 
+	Worker program is written to check connection with DB and if connection is not there it is trying to reestablish it.
 Front end :Entire application will work as it is but since old DB pod got deleted, old voting data from db is deleted since data is stored in same place. 
+So result pod show the result data after restart only.
+
+
+Jargons : 
+Isolation, Abstraction, Docker registry, Docker hub, Process, Network and Storage Isolation, Conatiner, Dockerfile
+Monolith, MicroServices, Kubectl, API server, Schedular, ETCD, POD, YAML, Label, Tainting, Namespace
+Controller, Deameonset, BatchJob, CroneJob
+Services, Nodeport, LoadBalancer, Deployment
+
+
