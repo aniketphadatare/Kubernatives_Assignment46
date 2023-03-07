@@ -1,0 +1,148 @@
+-> kubectl delete all --all
+
+-> cd $home
+
+-> git clone  https://github.com/ashishrpandey/example-voting-app
+
+-> cd example-voting-app/
+
+-> cd k8s-specifications/
+
+// To open and modify the port
+-> vi vote-service.yaml
+
+// To open and modify the port
+-> vi result-service.yaml
+
+-> kubectl apply -f .
+
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+
+-> kubectl get all 
+
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-b54cd94f4-fkjkn        1/1     Running   0          19s
+pod/redis-868d64d78-tr2qf     1/1     Running   0          19s
+pod/result-5d57b59f4b-7rrtt   1/1     Running   0          19s
+pod/vote-94849dc97-q7l7n      1/1     Running   0          19s
+pod/worker-dd46d7584-mbmf8    1/1     Running   0          18s
+
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db       ClusterIP   10.108.144.196   <none>        5432/TCP         19s
+service/redis    ClusterIP   10.99.115.24     <none>        6379/TCP         19s
+service/result   NodePort    10.96.119.108    <none>        5001:31004/TCP   19s
+service/vote     NodePort    10.99.181.161    <none>        5000:31003/TCP   18s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           19s
+deployment.apps/redis    1/1     1            1           19s
+deployment.apps/result   1/1     1            1           19s
+deployment.apps/vote     1/1     1            1           19s
+deployment.apps/worker   1/1     1            1           18s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       19s
+replicaset.apps/redis-868d64d78     1         1         1       19s
+replicaset.apps/result-5d57b59f4b   1         1         1       19s
+replicaset.apps/vote-94849dc97      1         1         1       19s
+replicaset.apps/worker-dd46d7584    1         1         1       18s
+
+-> kubectl get svc
+
+NAME     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+db       ClusterIP   10.108.144.196   <none>        5432/TCP         39s
+redis    ClusterIP   10.99.115.24     <none>        6379/TCP         39s
+result   NodePort    10.96.119.108    <none>        5001:31004/TCP   39s
+vote     NodePort    10.99.181.161    <none>        5000:31003/TCP   38s
+
+-> kubectl get po -o wide
+
+db-b54cd94f4-fkjkn        1/1     Running   0          3m44s   192.168.202.206   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running   0          3m44s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running   0          3m44s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-q7l7n      1/1     Running   0          3m44s   192.168.202.209   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-mbmf8    1/1     Running   0          3m43s   192.168.202.210   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+
+-> kubectl delete pod vote-94849dc97-q7l7n
+
+pod "vote-94849dc97-q7l7n" deleted
+
+-> kubectl get po -o wide
+
+NAME                      READY   STATUS        RESTARTS   AGE     IP                NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-fkjkn        1/1     Running       0          4m39s   192.168.202.206   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running       0          4m39s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running       0          4m39s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-q7l7n      0/1     Terminating   0          4m39s   192.168.202.209   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-qhvpf      1/1     Running       0          5s      192.168.202.211   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-mbmf8    1/1     Running       0          4m38s   192.168.202.210   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+-> kubectl get po -o wide
+
+NAME                      READY   STATUS    RESTARTS   AGE     IP                NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-fkjkn        1/1     Running   0          4m42s   192.168.202.206   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running   0          4m42s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running   0          4m42s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-qhvpf      1/1     Running   0          8s      192.168.202.211   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-mbmf8    1/1     Running   0          4m41s   192.168.202.210   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+
+-> kubectl delete pod worker-dd46d7584-mbmf8
+
+pod "worker-dd46d7584-mbmf8" deleted
+
+-> kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP                NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-fkjkn        1/1     Running   0          6m34s   192.168.202.206   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running   0          6m34s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running   0          6m34s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-qhvpf      1/1     Running   0          2m      192.168.202.211   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-rpk9h    1/1     Running   0          3s      192.168.202.212   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+-> kubectl delete pod db-b54cd94f4-fkjkn
+
+pod "db-b54cd94f4-fkjkn" deleted
+
+-> kubectl get po -o wide
+
+NAME                      READY   STATUS        RESTARTS   AGE     IP                NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-fkjkn        1/1     Terminating   0          8m22s   192.168.202.206   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+db-b54cd94f4-wxctw        1/1     Running       0          3s      192.168.202.213   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running       0          8m22s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running       0          8m22s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-qhvpf      1/1     Running       0          3m48s   192.168.202.211   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-rpk9h    1/1     Running       0          111s    192.168.202.212   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+-> kubectl get po -o wide
+
+NAME                      READY   STATUS    RESTARTS   AGE     IP                NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-wxctw        1/1     Running   0          98s     192.168.202.213   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-tr2qf     1/1     Running   0          9m57s   192.168.202.207   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-7rrtt   1/1     Running   1          9m57s   192.168.202.208   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-qhvpf      1/1     Running   0          5m23s   192.168.202.211   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-rpk9h    1/1     Running   1          3m26s   192.168.202.212   ip-172-31-10-65.ap-southeast-1.compute.internal   <none>           <none>
+
+
+Observation : 
+Vote Pod delete : 
+Backend : Pod got restarted because of replica set.
+Front end : New contianer taken over to serve the voting and no change in the application it is working.
+
+Worker Pod delete : 
+Backend : Pod got restarted and new Pod taken over the job.
+Front end : No change in the application behaviour, it is working as expected.
+
+
+DB pod delete:
+Backend : Pod got deleted and new DB pod got created. And both result and worker pod container got restarted without disturbing the pod.
+	Container restart has happened, which reestablish the connection with new DB and it works well with existing result and worker pod only. 
+Front end :Entire application will work as it is but since old DB pod got deleted, old voting data from db is deleted since data is stored in same place. 
